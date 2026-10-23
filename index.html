@@ -1,0 +1,1506 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seaszen · 个人主页</title>
+    <meta
+      name="description"
+      content="Seaszen 的个人主页：全栈开发、开源项目与联系方式。"
+    />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta property="og:title" content="Seaszen · 个人主页" />
+    <meta property="og:description" content="全栈开发、开源项目与联系方式。" />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23cdf56a'/%3E%3Ctext x='50' y='68' font-family='system-ui' font-size='56' font-weight='700' text-anchor='middle' fill='%230c0f07'%3ES%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      /* ===== 主题变量 ===== */
+      :root {
+        --bg: #0a0b0d;
+        --surface: #111418;
+        --surface-2: #171b21;
+        --line: rgba(255, 255, 255, 0.09);
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --text: #f2f4f7;
+        --muted: #98a1ad;
+        --accent: #cdf56a;
+        --accent-soft: rgba(205, 245, 106, 0.14);
+        --accent-ink: #0c0f07;
+        --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+        --font-sans:
+          "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system,
+          "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        --font-mono:
+          ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+        --radius: 20px;
+        --maxw: 1120px;
+      }
+
+      [data-theme="light"] {
+        --bg: #f4f5f1;
+        --surface: #ffffff;
+        --surface-2: #eceee6;
+        --line: rgba(12, 15, 7, 0.1);
+        --line-strong: rgba(12, 15, 7, 0.22);
+        --text: #10130c;
+        --muted: #5c6672;
+        --accent: #5f8f00;
+        --accent-soft: rgba(95, 143, 0, 0.12);
+        --accent-ink: #ffffff;
+        --shadow: 0 24px 60px -30px rgba(20, 30, 10, 0.35);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 84px;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        transition:
+          background-color 0.35s ease,
+          color 0.35s ease;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: -100px;
+        left: 16px;
+        z-index: 100;
+        padding: 10px 16px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-radius: 10px;
+        font-weight: 600;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 16px;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: var(--maxw);
+        margin-inline: auto;
+        padding-inline: clamp(20px, 5vw, 48px);
+      }
+
+      /* ===== 鼠标光晕 ===== */
+      .pointer-glow {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          600px circle at var(--mx, 50%) var(--my, 20%),
+          var(--accent-soft),
+          transparent 65%
+        );
+        opacity: 0.7;
+        transition: opacity 0.4s ease;
+      }
+
+      /* ===== 顶部导航 ===== */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        backdrop-filter: blur(14px);
+        background: var(--bg);
+        background: color-mix(in srgb, var(--bg) 78%, transparent);
+        border-bottom: 1px solid transparent;
+        transition:
+          border-color 0.3s ease,
+          background-color 0.3s ease;
+      }
+      .nav.is-scrolled {
+        border-bottom-color: var(--line);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        height: 68px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .brand-text {
+        font-size: 15px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .nav-links a {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 14px;
+        color: var(--muted);
+        transition:
+          color 0.2s ease,
+          background-color 0.2s ease;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-links a.is-active {
+        color: var(--text);
+        background: var(--surface-2);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .theme-toggle {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+      .theme-toggle:hover {
+        border-color: var(--line-strong);
+        transform: rotate(12deg);
+      }
+      .theme-toggle svg {
+        width: 18px;
+        height: 18px;
+      }
+      .icon-sun {
+        display: none;
+      }
+      [data-theme="light"] .icon-sun {
+        display: block;
+      }
+      [data-theme="light"] .icon-moon {
+        display: none;
+      }
+
+      [data-theme="light"] .nav {
+        background: var(--bg);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+      }
+
+      /* ===== Hero ===== */
+      .hero {
+        position: relative;
+        z-index: 1;
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        padding-top: 68px;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, var(--line) 1px, transparent 1px),
+          linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(
+          ellipse 70% 60% at 60% 40%,
+          #000 20%,
+          transparent 75%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse 70% 60% at 60% 40%,
+          #000 20%,
+          transparent 75%
+        );
+        opacity: 0.55;
+        pointer-events: none;
+      }
+
+      .hero-orb {
+        position: absolute;
+        top: 14%;
+        right: -6%;
+        width: clamp(280px, 38vw, 520px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 30%,
+          var(--accent-soft),
+          transparent 68%
+        );
+        filter: blur(30px);
+        animation: drift 16s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes drift {
+        from {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        to {
+          transform: translate3d(-28px, 34px, 0) scale(1.08);
+        }
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        padding-block: clamp(56px, 12vh, 120px);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 7px 14px 7px 11px;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        background: var(--surface);
+      }
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 0 var(--accent-soft);
+        animation: pulse 2.4s ease-out infinite;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 var(--accent-soft);
+        }
+        70% {
+          box-shadow: 0 0 0 9px transparent;
+        }
+        100% {
+          box-shadow: 0 0 0 0 transparent;
+        }
+      }
+
+      .hero-title {
+        margin-top: 26px;
+        font-size: clamp(3.2rem, 10vw, 7.4rem);
+        font-weight: 700;
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+      }
+      .hero-title .accent {
+        color: var(--accent);
+      }
+      .hero-title .line {
+        display: block;
+      }
+
+      .hero-sub {
+        margin-top: 26px;
+        max-width: 44ch;
+        font-size: clamp(1rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+      }
+      .hero-sub strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-top: 38px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 26px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          background-color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .btn svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.2s ease;
+      }
+      .btn:hover svg {
+        transform: translateX(3px);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-ghost {
+        border-color: var(--line-strong);
+        color: var(--text);
+      }
+      .btn-ghost:hover {
+        background: var(--surface);
+        border-color: var(--accent);
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 28px;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.03em;
+      }
+      .hero-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-meta b {
+        color: var(--text);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .scroll-hint {
+        position: absolute;
+        left: clamp(20px, 5vw, 48px);
+        bottom: 26px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .scroll-hint::after {
+        content: "";
+        display: block;
+        width: 56px;
+        height: 1px;
+        background: linear-gradient(to right, var(--accent), transparent);
+        animation: slide 2.4s ease-in-out infinite;
+      }
+      @keyframes slide {
+        0%,
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateX(12px);
+          opacity: 0.4;
+        }
+      }
+
+      /* ===== 滚动文字带 ===== */
+      .marquee {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        overflow: hidden;
+        border-block: 1px solid var(--line);
+        background: var(--surface);
+        user-select: none;
+      }
+      .marquee-track {
+        display: flex;
+        flex-shrink: 0;
+        width: max-content;
+        animation: marquee 34s linear infinite;
+      }
+      .marquee:hover .marquee-track {
+        animation-play-state: paused;
+      }
+      .marquee-group {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding: 16px 20px;
+        flex-shrink: 0;
+      }
+      .marquee-group span {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .marquee-group span::after {
+        content: "✦";
+        margin-left: 40px;
+        color: var(--accent);
+        font-size: 10px;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ===== 通用区块 ===== */
+      .section {
+        position: relative;
+        z-index: 1;
+        padding-block: clamp(80px, 12vw, 140px);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 44px;
+      }
+      .section-index {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        padding-top: 4px;
+      }
+      .section-title {
+        font-size: clamp(1.9rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+      }
+      .section-note {
+        margin-left: auto;
+        max-width: 32ch;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: clamp(32px, 6vw, 80px);
+        align-items: start;
+      }
+
+      .about-lead {
+        font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+        line-height: 1.55;
+        letter-spacing: -0.01em;
+      }
+      .about-lead em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .about-body {
+        margin-top: 22px;
+        color: var(--muted);
+        max-width: 56ch;
+      }
+
+      .facts {
+        border-top: 1px solid var(--line);
+      }
+      .fact {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+      }
+      .fact dt {
+        color: var(--muted);
+      }
+      .fact dd {
+        margin: 0;
+        font-weight: 600;
+        text-align: right;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 32px;
+      }
+      .tag {
+        padding: 7px 13px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted);
+        background: var(--surface);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+      .tag:hover {
+        color: var(--text);
+        border-color: var(--line-strong);
+        transform: translateY(-2px);
+      }
+
+      /* ===== 项目卡片 ===== */
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 300px;
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        overflow: hidden;
+        transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          420px circle at var(--cx, 80%) var(--cy, 0%),
+          var(--accent-soft),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        border-color: var(--line-strong);
+        box-shadow: var(--shadow);
+      }
+      .card:hover::before {
+        opacity: 1;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .card-num {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+      .card-arrow {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        transition:
+          background-color 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .card-arrow svg {
+        width: 15px;
+        height: 15px;
+      }
+      .card:hover .card-arrow {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+        transform: rotate(-45deg);
+      }
+
+      .card-title {
+        margin-top: 40px;
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+      }
+      .card-desc {
+        margin-top: 12px;
+        font-size: 14px;
+        color: var(--muted);
+        flex-grow: 1;
+      }
+      .card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 24px;
+      }
+      .card-tags span {
+        padding: 5px 10px;
+        border-radius: 6px;
+        background: var(--surface-2);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ===== 联系 ===== */
+      .contact {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+        gap: 40px;
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
+      }
+
+      .contact-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .contact-title {
+        margin-top: 14px;
+        font-size: clamp(2rem, 5.4vw, 4.2rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+      }
+      .contact-mail {
+        position: relative;
+        display: inline-block;
+        color: var(--accent);
+        word-break: break-all;
+      }
+      .contact-mail::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.35s ease;
+      }
+      .contact-mail:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .socials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+      }
+      .social {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 14px;
+        color: var(--muted);
+        background: var(--surface);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+      .social svg {
+        width: 16px;
+        height: 16px;
+      }
+      .social:hover {
+        color: var(--text);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .contact-side {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 2;
+        color: var(--muted);
+        text-align: right;
+      }
+      .contact-side b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* ===== 页脚 ===== */
+      .footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--line);
+      }
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-block: 28px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer-inner .mono {
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .to-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.2s ease;
+      }
+      .to-top:hover {
+        color: var(--accent);
+      }
+      .to-top svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* ===== 出现动画 ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ===== 响应式 ===== */
+      @media (max-width: 900px) {
+        .work-grid {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          min-height: auto;
+        }
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+        .section-head {
+          flex-wrap: wrap;
+        }
+        .section-note {
+          margin-left: 0;
+          max-width: none;
+        }
+        .contact {
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+        .contact-side {
+          text-align: left;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          min-height: auto;
+        }
+        .hero-inner {
+          padding-block: 96px 64px;
+        }
+        .hero-actions .btn {
+          flex: 1 1 100%;
+          justify-content: center;
+        }
+        .hero-meta {
+          gap: 12px;
+        }
+        .scroll-hint {
+          display: none;
+        }
+        .card {
+          padding: 22px;
+        }
+        .card-title {
+          margin-top: 28px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="pointer-glow" aria-hidden="true"></div>
+
+    <header class="nav" id="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="#home" aria-label="返回首页">
+          <span class="brand-mark">S</span>
+          <span class="brand-text">Seaszen</span>
+        </a>
+
+        <nav aria-label="主导航">
+          <ul class="nav-links">
+            <li><a href="#about">关于</a></li>
+            <li><a href="#work">项目</a></li>
+            <li><a href="#contact">联系</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            type="button"
+            aria-label="切换深浅色主题"
+            title="切换主题"
+          >
+            <svg
+              class="icon-moon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+            </svg>
+            <svg
+              class="icon-sun"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ==================== 首屏 ==================== -->
+      <section class="hero" id="home">
+        <div class="hero-orb" aria-hidden="true"></div>
+        <div class="wrap hero-inner">
+          <span class="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            目前开放远程合作
+          </span>
+
+          <h1 class="hero-title">
+            <span class="line">你好，我是</span>
+            <span class="line"><span class="accent">Seaszen</span>。</span>
+          </h1>
+
+          <p class="hero-sub">
+            一名<strong>全栈开发者</strong>，专注于把复杂的想法拆解成清晰、可靠、可维护的产品。
+            喜欢简洁的界面、扎实的代码，以及一切能让人少点烦心的工具。
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#work">
+              看看我的作品
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </a>
+            <a
+              class="btn btn-ghost"
+              href="https://github.com/seaszen"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <span><b>8+</b> 年开发经验</span>
+            <span><b>20+</b> 个交付项目</span>
+            <span><b>深圳</b> · UTC+8</span>
+          </div>
+        </div>
+
+        <div class="scroll-hint" aria-hidden="true">scroll</div>
+      </section>
+
+      <!-- ==================== 技能滚动带 ==================== -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <div class="marquee-group">
+            <span>TypeScript</span><span>React</span><span>Vue</span
+            ><span>Node.js</span> <span>Python</span><span>PostgreSQL</span
+            ><span>Docker</span><span>Kubernetes</span>
+            <span>GitHub Actions</span><span>UI Design</span>
+          </div>
+          <div class="marquee-group">
+            <span>TypeScript</span><span>React</span><span>Vue</span
+            ><span>Node.js</span> <span>Python</span><span>PostgreSQL</span
+            ><span>Docker</span><span>Kubernetes</span>
+            <span>GitHub Actions</span><span>UI Design</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== 关于 ==================== -->
+      <section class="section" id="about">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="section-index">01</span>
+            <h2 class="section-title">关于我</h2>
+            <p class="section-note">
+              写代码，也写文档；关注体验，也关注长期维护成本。
+            </p>
+          </div>
+
+          <div class="about-grid">
+            <div class="reveal">
+              <p class="about-lead">
+                我相信好的软件应当<em>安静地工作</em>：用户感受不到它的存在，
+                却离不开它带来的顺畅。
+              </p>
+              <p class="about-body">
+                过去几年，我主要在做 Web
+                全栈开发与工程化建设，从需求梳理、交互设计到接口实现与部署上线，
+                习惯把端到端的问题一次解决。业余时间维护一些开源项目，也会把踩过的坑写成笔记分享出来。
+              </p>
+              <div class="tag-row">
+                <span class="tag">前端架构</span>
+                <span class="tag">Node / Python</span>
+                <span class="tag">数据库设计</span>
+                <span class="tag">CI / CD</span>
+                <span class="tag">性能优化</span>
+                <span class="tag">开源维护</span>
+              </div>
+            </div>
+
+            <dl class="facts reveal">
+              <div class="fact">
+                <dt>坐标</dt>
+                <dd>深圳 · 中国</dd>
+              </div>
+              <div class="fact">
+                <dt>方向</dt>
+                <dd>Web 全栈 / 工程化</dd>
+              </div>
+              <div class="fact">
+                <dt>状态</dt>
+                <dd>开放合作中</dd>
+              </div>
+              <div class="fact">
+                <dt>邮箱</dt>
+                <dd>hello@example.com</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 项目 ==================== -->
+      <section class="section" id="work">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <span class="section-index">02</span>
+            <h2 class="section-title">精选项目</h2>
+            <p class="section-note">
+              以下内容为占位示例，替换成你的真实项目即可。
+            </p>
+          </div>
+
+          <div class="work-grid">
+            <!-- 项目卡片：修改标题、描述、标签与链接即可 -->
+            <a
+              class="card reveal"
+              href="https://github.com/seaszen/www"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="card-top">
+                <span class="card-num">/ 01</span>
+                <span class="card-arrow" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </div>
+              <h3 class="card-title">个人主页</h3>
+              <p class="card-desc">
+                零依赖的单页个人站点，自动跟随系统主题，通过 GitHub Actions
+                一键部署到 GitHub Pages。
+              </p>
+              <div class="card-tags">
+                <span>HTML</span><span>CSS</span><span>Actions</span>
+              </div>
+            </a>
+
+            <a
+              class="card reveal"
+              href="https://github.com/seaszen"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="card-top">
+                <span class="card-num">/ 02</span>
+                <span class="card-arrow" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </div>
+              <h3 class="card-title">工具库项目</h3>
+              <p class="card-desc">
+                一组日常开发中沉淀下来的小工具，覆盖请求封装、数据校验与构建配置，按需引入、包体积友好。
+              </p>
+              <div class="card-tags">
+                <span>TypeScript</span><span>Node.js</span><span>ESM</span>
+              </div>
+            </a>
+
+            <a
+              class="card reveal"
+              href="https://github.com/seaszen"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="card-top">
+                <span class="card-num">/ 03</span>
+                <span class="card-arrow" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </div>
+              <h3 class="card-title">开源实验</h3>
+              <p class="card-desc">
+                对交互与动画的持续探索：轻量、可访问、可组合的界面实验，记录一些有趣但未必实用的想法。
+              </p>
+              <div class="card-tags">
+                <span>Vue</span><span>Canvas</span><span>Motion</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 联系 ==================== -->
+      <section class="section" id="contact">
+        <div class="wrap">
+          <div class="contact reveal">
+            <div>
+              <p class="contact-eyebrow">03 / 联系</p>
+              <h2 class="contact-title">
+                有想法？<br />
+                <a class="contact-mail" href="mailto:hello@example.com"
+                  >hello@example.com</a
+                >
+              </h2>
+              <div class="socials">
+                <a
+                  class="social"
+                  href="https://github.com/seaszen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"
+                    />
+                  </svg>
+                  GitHub
+                </a>
+                <a class="social" href="mailto:hello@example.com">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 7 9 6 9-6" />
+                  </svg>
+                  邮箱
+                </a>
+                <a
+                  class="social"
+                  href="https://github.com/seaszen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 4h16v16H4z" />
+                    <path d="M8 10v6M8 7v.01M12 16v-6M16 16v-4a2 2 0 0 0-4 0" />
+                  </svg>
+                  主页
+                </a>
+              </div>
+            </div>
+
+            <div class="contact-side">
+              <div><b>响应时间</b><br />通常 1-2 个工作日内</div>
+              <div style="margin-top: 18px">
+                <b>擅长</b><br />Web 产品 · 工具链 · 自动化
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <span class="mono"
+          >© <span id="year">2026</span> Seaszen · 保留所有权利</span
+        >
+        <span class="mono">用原生 HTML / CSS 构建 · 由 GitHub Pages 托管</span>
+        <a class="to-top" href="#home">
+          回到顶部
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 19V5M6 11l6-6 6 6" />
+          </svg>
+        </a>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById("themeToggle");
+        var metaTheme = document.querySelector('meta[name="theme-color"]');
+        var prefersLight = window.matchMedia("(prefers-color-scheme: light)");
+
+        function applyTheme(theme) {
+          root.setAttribute("data-theme", theme);
+          if (metaTheme) {
+            metaTheme.setAttribute(
+              "content",
+              theme === "light" ? "#f4f5f1" : "#0a0b0d",
+            );
+          }
+          if (toggle) {
+            toggle.setAttribute(
+              "aria-label",
+              theme === "light" ? "切换到深色主题" : "切换到浅色主题",
+            );
+          }
+        }
+
+        var stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch (e) {}
+        applyTheme(stored || (prefersLight.matches ? "light" : "dark"));
+
+        if (toggle) {
+          toggle.addEventListener("click", function () {
+            var next =
+              root.getAttribute("data-theme") === "light" ? "dark" : "light";
+            applyTheme(next);
+            try {
+              localStorage.setItem("theme", next);
+            } catch (e) {}
+          });
+        }
+
+        prefersLight.addEventListener("change", function (e) {
+          var saved = null;
+          try {
+            saved = localStorage.getItem("theme");
+          } catch (err) {}
+          if (!saved) applyTheme(e.matches ? "light" : "dark");
+        });
+
+        // 导航滚动状态
+        var nav = document.getElementById("nav");
+        function onScroll() {
+          nav.classList.toggle("is-scrolled", window.scrollY > 8);
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+
+        // 元素进入视口时淡入
+        var reveals = document.querySelectorAll(".reveal");
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("is-visible");
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+          );
+          reveals.forEach(function (el) {
+            io.observe(el);
+          });
+        } else {
+          reveals.forEach(function (el) {
+            el.classList.add("is-visible");
+          });
+        }
+
+        // 导航高亮
+        var links = Array.prototype.slice.call(
+          document.querySelectorAll(".nav-links a"),
+        );
+        var sections = links
+          .map(function (link) {
+            return document.querySelector(link.getAttribute("href"));
+          })
+          .filter(Boolean);
+        if ("IntersectionObserver" in window && sections.length) {
+          var spy = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                links.forEach(function (link) {
+                  link.classList.toggle(
+                    "is-active",
+                    link.getAttribute("href") === "#" + entry.target.id,
+                  );
+                });
+              });
+            },
+            { threshold: 0.35, rootMargin: "-20% 0px -55% 0px" },
+          );
+          sections.forEach(function (section) {
+            spy.observe(section);
+          });
+        }
+
+        // 鼠标跟随光晕与卡片高光
+        var finePointer = window.matchMedia("(pointer: fine)").matches;
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (finePointer && !reduceMotion) {
+          var glow = document.querySelector(".pointer-glow");
+          var frame = null;
+          window.addEventListener(
+            "pointermove",
+            function (e) {
+              if (frame) return;
+              frame = requestAnimationFrame(function () {
+                frame = null;
+                if (glow) {
+                  glow.style.setProperty("--mx", e.clientX + "px");
+                  glow.style.setProperty("--my", e.clientY + "px");
+                }
+              });
+            },
+            { passive: true },
+          );
+
+          document.querySelectorAll(".card").forEach(function (card) {
+            card.addEventListener("pointermove", function (e) {
+              var rect = card.getBoundingClientRect();
+              card.style.setProperty("--cx", e.clientX - rect.left + "px");
+              card.style.setProperty("--cy", e.clientY - rect.top + "px");
+            });
+          });
+        }
+
+        var year = document.getElementById("year");
+        if (year) year.textContent = new Date().getFullYear();
+      })();
+    </script>
+  </body>
+</html>
